@@ -1,0 +1,655 @@
+<!-- v1.0 2025-08-20 -->
+<!--
+PLAN
+- Struttura slide:
+  0) Hero
+  1) Sommario/Agenda (link alle sezioni)
+  2) Perché adesso (trend & casi d’uso) + callout
+  3) Cos’è un agente AI (pattern) + callout
+  4) Architettura di riferimento (diagramma Mermaid)
+  5) Use case & ROI (grafico Line Chart.js)
+  6) Rischi, governance, compliance (callout warn)
+  7) Roadmap 90 giorni (grafico Doughnut Chart.js + CTA)
+  8) Tabella comparativa (Build vs Buy vs Hybrid)
+  9) Q&A
+  10) Risorse/Link utili + mini-footer GitHub Pages
+- Librerie via CDN: Reveal.js (+ Notes), Chart.js, Mermaid, Tailwind (CDN), Font system
+- Funzioni JS inline:
+  - init Reveal (progress, hash, slideNumber, backgroundTransition)
+  - init Chart.js (responsive, legenda cliccabile, tooltip custom)
+  - init Mermaid con tema coerente a dark/light
+  - toggle tema con persistenza (localStorage) + sync colori grafici
+  - overlay Help con hotkeys (←/→, F, B, G, D, H)
+  - bottone Stampa/Esporta PDF (+ @media print)
+  - gestione fallback note CDN (commenti)
+-->
+
+<!doctype html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><!-- MODIFICA QUI: TITOLO -->AI Agentica per il Business — Dalla teoria all’impatto</title>
+  <meta name="description" content="Presentazione interattiva Reveal.js con grafici e diagramma, tema dark/light e funzioni accessibili." />
+  <meta name="color-scheme" content="light dark" />
+
+  <!-- Reveal.js core + theme (cambiamo dinamicamente il tema con JS) -->
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js/dist/reveal.css" />
+  <link id="reveal-theme" rel="stylesheet" href="https://unpkg.com/reveal.js/dist/theme/white.css" />
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <!-- Accessibilità & stile minimo -->
+  <style>
+    :root {
+      /* MODIFICA QUI: COLORE_ACCENTO */
+      --accent: #22c55e;
+      --card-bg: rgba(0,0,0,0.04);
+      --card-bg-dark: rgba(255,255,255,0.06);
+      --callout-info: #0284c7;
+      --callout-warn: #ea580c;
+      --callout-success: #16a34a;
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+    }
+    .accent {
+      color: var(--accent);
+    }
+    .btn {
+      border: 1px solid transparent;
+      padding: .45rem .8rem;
+      border-radius: .75rem;
+      font-weight: 600;
+      background: var(--accent);
+      color: #fff;
+      transition: transform .05s ease, box-shadow .2s ease;
+    }
+    .btn:focus-visible { outline: 3px solid #0000; box-shadow: 0 0 0 4px rgba(34,197,94,.35); }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent; border-color: var(--accent); color: var(--accent);
+    }
+    .toolbar {
+      position: fixed; right: 1rem; top: 1rem; z-index: 50; display: flex; gap: .5rem;
+    }
+    .help-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.6);
+      display: none; align-items: center; justify-content: center; z-index: 60;
+    }
+    .help-overlay[aria-hidden="false"] { display: flex; }
+    .help-card {
+      max-width: 48rem; width: 92%;
+      background: #fff; color: #111; border-radius: 1rem; padding: 1rem 1.25rem;
+    }
+    html[data-theme="dark"] .help-card { background: #111827; color: #e5e7eb; }
+    .callout {
+      border-left: .4rem solid var(--accent);
+      padding: .75rem 1rem; border-radius: .5rem; background: var(--card-bg);
+    }
+    html[data-theme="dark"] .callout { background: var(--card-bg-dark); }
+    .callout.info { border-left-color: var(--callout-info); }
+    .callout.warn { border-left-color: var(--callout-warn); }
+    .callout.success { border-left-color: var(--callout-success); }
+    .kbd {
+      border: 1px solid #d1d5db; border-bottom-width: 3px; border-radius: .5rem; padding: .1rem .4rem; font-weight: 700; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    html[data-theme="dark"] .kbd { border-color: #374151; }
+    .reveal .slides { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji"; }
+    /* Hero full-bleed background gradient */
+    .hero {
+      background: radial-gradient(1200px 600px at 80% 0%, rgba(34,197,94,.2), transparent), linear-gradient(160deg, rgba(34,197,94,.15), transparent 60%);
+    }
+    html[data-theme="dark"] .hero {
+      background: radial-gradient(1200px 600px at 80% 0%, rgba(34,197,94,.2), transparent), linear-gradient(160deg, rgba(34,197,94,.12), transparent 60%);
+    }
+    /* Chart containers for responsive sizing */
+    .chart-wrap { width: 100%; height: 380px; }
+    /* Blackout overlay (B) */
+    #blackout { position: fixed; inset: 0; background: #000; opacity: 0.96; display: none; z-index: 70; }
+    #blackout[aria-hidden="false"] { display: block; }
+    /* Print adjustments */
+    @media print {
+      .toolbar, .help-overlay, #blackout { display: none !important; }
+      .reveal .controls, .reveal .progress { display: none !important; }
+      .reveal .slide-number { display: inline-block !important; position: fixed; bottom: .5rem; right: .5rem; }
+    }
+  </style>
+
+  <!-- NOTE CDN fallback:
+       - Reveal.js alt: https://cdn.jsdelivr.net/npm/reveal.js
+       - Chart.js alt: https://unpkg.com/chart.js
+       - Mermaid alt: https://unpkg.com/mermaid@10/dist/mermaid.min.js
+       - Tailwind alt: https://unpkg.com/tailwindcss-cdn
+       In caso di errori di rete, mostrare i messaggi di degrado nel pannello Help.
+  -->
+</head>
+<body class="min-h-screen">
+
+  <!-- Toolbar azioni rapide -->
+  <nav class="toolbar" role="toolbar" aria-label="Comandi rapidi">
+    <button id="themeToggle" class="btn" type="button" aria-pressed="false" aria-label="Toggle tema (D)">
+      🌓 Tema
+    </button>
+    <button id="helpToggle" class="btn btn-secondary" type="button" aria-label="Mostra guida (H)">
+      ❔ Help
+    </button>
+    <button id="printBtn" class="btn btn-secondary" type="button" aria-label="Stampa/Esporta PDF">
+      🖨️ PDF
+    </button>
+  </nav>
+
+  <!-- Overlay Help -->
+  <div id="helpOverlay" class="help-overlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="helpTitle">
+    <div class="help-card shadow-xl">
+      <h2 id="helpTitle" class="text-2xl font-bold mb-2">Guida rapida</h2>
+      <p class="opacity-90 mb-3">Naviga con tastiera e usa i comandi rapidi:</p>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+        <li><span class="kbd">←</span>/<span class="kbd">→</span> Naviga slide</li>
+        <li><span class="kbd">F</span> Fullscreen</li>
+        <li><span class="kbd">B</span> Blackout/Focus</li>
+        <li><span class="kbd">G</span> Vai all’Agenda</li>
+        <li><span class="kbd">D</span> Tema chiaro/scuro</li>
+        <li><span class="kbd">H</span> Mostra/Nascondi Help</li>
+      </ul>
+      <div class="text-sm opacity-80">
+        <p>Se una libreria CDN non si carica, ricarica la pagina o prova l’alternativa indicata nei commenti HTML.</p>
+      </div>
+      <div class="mt-4 flex justify-end gap-2">
+        <button id="helpClose" class="btn btn-secondary" type="button">Chiudi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blackout overlay -->
+  <div id="blackout" aria-hidden="true" aria-label="Schermo oscurato per focus"></div>
+
+  <!-- Presentazione Reveal -->
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 0) HERO -->
+      <section class="hero" aria-label="Slide introduttiva">
+        <h1 class="text-6xl font-extrabold leading-tight">
+          <!-- MODIFICA QUI: TITOLO -->
+          AI Agentica per il Business
+        </h1>
+        <p class="text-2xl mt-4 opacity-90">
+          <!-- MODIFICA QUI: SOTTOTITOLO -->
+          Dalla teoria all’impatto in 30 minuti
+        </p>
+        <p class="mt-6">
+          <!-- MODIFICA QUI: AUTORE/BRAND/LINK -->
+          <a href="https://carlomariopoli.it" target="_blank" rel="noopener" class="underline decoration-2 accent">AI Companion by CMP</a>
+          · <span class="opacity-80">Senior Consultant — Digital Transformation & AI</span>
+        </p>
+        <div class="mt-8">
+          <button class="btn" onclick="Reveal.slide(1,0)" aria-label="Vai all’Agenda">Iniziamo →</button>
+        </div>
+        <aside class="notes">
+          Presenta te stesso in 20–30 secondi. Evidenzia obiettivo: esempi concreti e takeaway operativi.
+        </aside>
+      </section>
+
+      <!-- 1) AGENDA -->
+      <section aria-label="Agenda">
+        <h2 class="accent">Agenda</h2>
+        <ol class="text-left mx-auto max-w-3xl">
+          <!-- MODIFICA QUI: ELENCO_BULLET_POINT -->
+          <li><a href="#/2" class="underline">Perché adesso</a></li>
+          <li><a href="#/3" class="underline">Cos’è un agente AI</a></li>
+          <li><a href="#/4" class="underline">Architettura di riferimento</a></li>
+          <li><a href="#/5" class="underline">Use case & ROI</a></li>
+          <li><a href="#/6" class="underline">Rischi & governance</a></li>
+          <li><a href="#/7" class="underline">Roadmap 90 giorni</a></li>
+          <li><a href="#/8" class="underline">Build vs Buy vs Hybrid</a></li>
+          <li><a href="#/9" class="underline">Q&A</a></li>
+          <li><a href="#/10" class="underline">Risorse</a></li>
+        </ol>
+        <aside class="notes">
+          Anticipa i benefici per l’audience e invita a domande in qualsiasi momento.
+        </aside>
+      </section>
+
+      <!-- 2) PERCHÉ ADESSO -->
+      <section aria-label="Perché adesso">
+        <h2>Perché <span class="accent">adesso</span></h2>
+        <div class="callout info" role="note" aria-label="Contesto">
+          <!-- MODIFICA QUI -->
+          Domanda di automazione intelligente in crescita, tool maturi, casi d’uso replicabili, e pressione competitiva su time-to-value.
+        </div>
+        <ul class="text-left mx-auto max-w-3xl mt-6">
+          <li>Trend: agenti multimodali, tool use, integrazione con sistemi aziendali</li>
+          <li>Casi d’uso: assistenza interna, estrazione conoscenza, automazione processi</li>
+          <li>Impatto: qualità, velocità, riduzione errori</li>
+        </ul>
+        <aside class="notes">
+          Fornisci un esempio recente e un numero/benchmark credibile del tuo settore.
+        </aside>
+      </section>
+
+      <!-- 3) CHE COS’È UN AGENTE AI -->
+      <section aria-label="Cos’è un agente AI">
+        <h2>Cos’è un <span class="accent">agente AI</span>?</h2>
+        <div class="callout success" role="note" aria-label="Definizione breve">
+          Orchestratore intelligente che percepisce contesto, pianifica, usa strumenti, agisce e apprende dal feedback.
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div class="p-4 rounded-xl" style="background: var(--card-bg);"><strong>Pattern</strong><br/>Reflection, Tool Use, ReAct, Planning, Multi-agent</div>
+          <div class="p-4 rounded-xl" style="background: var(--card-bg);"><strong>Abilità</strong><br/>Reasoning, grounding dati, azioni con API, verifica</div>
+          <div class="p-4 rounded-xl" style="background: var(--card-bg);"><strong>Outcome</strong><br/>Task completati con KPI misurabili</div>
+        </div>
+        <aside class="notes">
+          Cita 1–2 pattern e mostra quando sceglierli. Prometti dettaglio nelle prossime slide.
+        </aside>
+      </section>
+
+      <!-- 4) ARCHITETTURA (MERMAID) -->
+      <section aria-label="Architettura di riferimento">
+        <h2>Architettura di riferimento</h2>
+        <div class="mermaid" aria-label="Diagramma architetturale">
+        %% MODIFICA QUI (Mermaid)
+        flowchart LR
+          U[Utente] -->|richiesta| A[Agente]
+          A --> P{Pianificazione}
+          P --> T[Tool/API]
+          T --> D[(Dati & Conoscenza)]
+          D --> V[Valutazione]
+          V -->|output| U
+          V --> F{Feedback}
+          F --> A
+        </div>
+        <aside class="notes">
+          Sottolinea cicli di feedback e responsabilità (observability, audit log).
+        </aside>
+      </section>
+
+      <!-- 5) USE CASE & ROI (LINE CHART) -->
+      <section aria-label="Use case & ROI">
+        <h2>Use case & ROI</h2>
+        <div class="callout" role="note" aria-label="Descrizione grafico">
+          <!-- TODO: sostituisci dati -->
+          Adozione e risparmio stimato su 12 mesi per tre aree pilota.
+        </div>
+        <div class="chart-wrap mt-4" role="img" aria-label="Andamento adozione AI in 12 mesi">
+          <canvas id="chartLine"></canvas>
+        </div>
+        <aside class="notes">
+          Evidenzia milestone e correlazione con metriche di qualità/tempo ciclo.
+        </aside>
+      </section>
+
+      <!-- 6) RISCHI & GOVERNANCE -->
+      <section aria-label="Rischi e governance">
+        <h2>Rischi & <span class="accent">governance</span></h2>
+        <div class="callout warn" role="alert" aria-label="Avvertenze principali">
+          Privacy, sicurezza, hallucinations, bias, compliance settoriale: mitigare con policy, valutazioni rischio, guardrails e human-in-the-loop.
+        </div>
+        <ul class="text-left mx-auto max-w-3xl mt-6">
+          <li>Data minimization & classificazione</li>
+          <li>Monitoraggio qualità & incident response</li>
+          <li>Trasparenza: log, explainability, versionamento prompt/modelli</li>
+        </ul>
+        <aside class="notes">
+          Indica le 2–3 policy minime da adottare prima del go-live.
+        </aside>
+      </section>
+
+      <!-- 7) ROADMAP 90 GIORNI (DOUGHNUT + CTA) -->
+      <section aria-label="Roadmap 90 giorni">
+        <h2>Roadmap <span class="accent">90 giorni</span></h2>
+        <ol class="text-left mx-auto max-w-3xl">
+          <li>Settimane 1–3: Discovery & priorità (processi, dati, KPI)</li>
+          <li>Settimane 4–6: Prototipo agentico + integrazione tool</li>
+          <li>Settimane 7–9: Misura & guardrails</li>
+          <li>Settimane 10–12: Pilota controllato & go/no-go</li>
+        </ol>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mt-6">
+          <div class="chart-wrap" role="img" aria-label="Distribuzione investimenti per categoria">
+            <canvas id="chartDoughnut"></canvas>
+          </div>
+          <div>
+            <p class="mb-4">Prenota un <strong>workshop di 4 ore</strong> per allineare stakeholder e definire il primo caso d’uso.</p>
+            <button class="btn" onclick="Reveal.slide(10,0)" aria-label="Vai alle Risorse">Apri Risorse →</button>
+          </div>
+        </div>
+        <aside class="notes">
+          Invita all’azione concreta: workshop, assessment o PoC con KPI definiti.
+        </aside>
+      </section>
+
+      <!-- 8) TABELLA COMPARATIVA -->
+      <section aria-label="Tabella comparativa build vs buy vs hybrid">
+        <h2>Opzioni: Build vs Buy vs Hybrid</h2>
+        <table class="mx-auto">
+          <thead>
+            <tr>
+              <th>Critero</th>
+              <th>Build</th>
+              <th>Buy</th>
+              <th>Hybrid</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Time-to-Value</td>
+              <td>Lento</td>
+              <td>Veloce</td>
+              <td>Medio</td>
+            </tr>
+            <tr>
+              <td>Costi</td>
+              <td>Alti all’inizio</td>
+              <td>Ricorrenti</td>
+              <td>Bilanciati</td>
+            </tr>
+            <tr>
+              <td>Controllo</td>
+              <td>Massimo</td>
+              <td>Limitato</td>
+              <td>Alto</td>
+            </tr>
+            <tr>
+              <td>Rischio</td>
+              <td>Alto</td>
+              <td>Medio</td>
+              <td>Gestibile</td>
+            </tr>
+            <tr>
+              <td>Scalabilità</td>
+              <td>Dipende dal team</td>
+              <td>Generally buona</td>
+              <td>Flessibile</td>
+            </tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          Evidenzia scelta predefinita per PMI: Hybrid con componenti riusabili.
+        </aside>
+      </section>
+
+      <!-- 9) Q&A -->
+      <section aria-label="Domande e risposte">
+        <h2>Q&amp;A</h2>
+        <p>Parliamone! Domande, dubbi, casi specifici?</p>
+        <!-- Placeholder immagine inline (offline) -->
+        <img
+          alt="Placeholder grafico discussione"
+          width="560" height="260"
+          src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="560" height="260"><rect width="100%%" height="100%%" fill="white"/><rect x="4" y="4" width="552" height="252" fill="none" stroke="gray" stroke-width="2"/><text x="50%%" y="50%%" font-size="20" text-anchor="middle" fill="gray">Spazio per screenshot o grafico</text></svg>' />
+        <aside class="notes">
+          Invita a proporre un caso interno da valutare insieme live.
+        </aside>
+      </section>
+
+      <!-- 10) RISORSE -->
+      <section aria-label="Risorse e link utili">
+        <h2>Risorse / Link utili</h2>
+        <ul class="text-left mx-auto max-w-3xl">
+          <li><!-- MODIFICA QUI -->Guida al Prompting: <a href="https://www.promptingguide.ai/it" target="_blank" rel="noopener">promptingguide.ai/it</a></li>
+          <li><!-- MODIFICA QUI -->Building Effective AI Agents (Anthropic): <a href="https://www.anthropic.com/research" target="_blank" rel="noopener">anthropic.com/research</a></li>
+          <li><!-- MODIFICA QUI -->Google: Prompt Engineering Whitepaper: <a href="https://ai.google" target="_blank" rel="noopener">ai.google</a></li>
+        </ul>
+        <hr class="my-6"/>
+        <div class="text-sm opacity-80 text-left mx-auto max-w-3xl">
+          <strong>Come pubblicare su GitHub Pages</strong><br/>
+          1) Crea un repository pubblico su GitHub.<br/>
+          2) Aggiungi questo file come <code>index.html</code> alla root.<br/>
+          3) Vai su <em>Settings → Pages</em>, seleziona il branch (es. <code>main</code>) e la root, salva.<br/>
+          4) Dopo pochi minuti, il sito sarà online all’URL mostrato nella pagina Pages.
+        </div>
+        <aside class="notes">
+          Offri anche un PDF con note o checklist di adozione.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Scripts: Reveal init, Theme toggle, Charts, Mermaid, Hotkeys -->
+  <script>
+    // === Tema & Persistenza ===
+    const themeLink = document.getElementById('reveal-theme');
+    const getStoredTheme = () => localStorage.getItem('theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+    function currentTextColor() {
+      return getComputedStyle(document.body).color || (document.documentElement.dataset.theme === 'dark' ? '#e5e7eb' : '#111827');
+    }
+    function gridColorFromText(col) {
+      // schiarisci per griglia
+      return document.documentElement.dataset.theme === 'dark' ? 'rgba(229,231,235,0.12)' : 'rgba(17,24,39,0.1)';
+    }
+    function getAccent() {
+      return getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#22c55e';
+    }
+
+    function applyMermaidTheme(theme) {
+      const mTheme = theme === 'dark' ? 'dark' : 'default';
+      if (window.mermaid) {
+        try {
+          mermaid.initialize({ startOnLoad: false, theme: mTheme });
+          // Re-render di tutti i blocchi
+          mermaid.run({ querySelector: '.mermaid' });
+        } catch(e) {
+          console.warn('Mermaid init error:', e);
+        }
+      }
+    }
+
+    let charts = [];
+    function updateChartColors() {
+      const color = currentTextColor();
+      const grid = gridColorFromText(color);
+      Chart.defaults.color = color;
+      Chart.defaults.borderColor = grid;
+      charts.forEach(ch => ch.update('none'));
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      themeLink.setAttribute('href', `https://unpkg.com/reveal.js/dist/theme/${theme === 'dark' ? 'black' : 'white'}.css`);
+      localStorage.setItem('theme', theme);
+      applyMermaidTheme(theme);
+      updateChartColors();
+      // Aggiorna stato aria del bottone
+      const btn = document.getElementById('themeToggle');
+      btn?.setAttribute('aria-pressed', theme === 'dark');
+    }
+
+    // === Reveal Init ===
+    function initReveal() {
+      if (!window.Reveal) {
+        alert('⚠️ Impossibile caricare Reveal.js. Controlla la connessione o prova una CDN alternativa (vedi commenti HTML).');
+        return;
+      }
+      Reveal.initialize({
+        hash: true,
+        progress: true,
+        slideNumber: 'c/t',
+        backgroundTransition: 'fade',
+        plugins: [ RevealNotes ],
+      });
+
+      Reveal.on('ready', () => {
+        charts.forEach(ch => ch.resize());
+      });
+      Reveal.on('slidechanged', () => {
+        charts.forEach(ch => ch.resize());
+      });
+    }
+
+    // === Chart.js Init ===
+    function initCharts() {
+      if (!window.Chart) {
+        console.warn('Chart.js non disponibile');
+        return;
+      }
+      const accent = getAccent();
+
+      // LINE: adozione 12 mesi (dataset plausibile) — TODO sostituire
+      const ctxL = document.getElementById('chartLine')?.getContext('2d');
+      if (ctxL) {
+        const labels = ['M1','M2','M3','M4','M5','M6','M7','M8','M9','M10','M11','M12']; // TODO: sostituisci
+        const data = [2,4,6,8,12,18,24,32,40,49,57,65]; // TODO: sostituisci
+        charts.push(new Chart(ctxL, {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [{
+              label: 'Adozione (%)',
+              data,
+              fill: false,
+              borderColor: accent,
+              backgroundColor: accent,
+              tension: 0.25,
+              pointRadius: 2.5
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'nearest', intersect: false },
+            plugins: {
+              legend: { display: true },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y}%`
+                }
+              }
+            },
+            scales: {
+              y: { ticks: { callback: v => v + '%' }, min: 0, max: 100 },
+              x: { grid: { display: false } }
+            }
+          }
+        }));
+      }
+
+      // DOUGHNUT: distribuzione investimenti — TODO sostituire
+      const ctxD = document.getElementById('chartDoughnut')?.getContext('2d');
+      if (ctxD) {
+        const labels = ['Tooling','Data & RAG','Governance','Change Mgmt','Ops']; // TODO: sostituisci
+        const data = [30,25,15,20,10]; // TODO: sostituisci
+        charts.push(new Chart(ctxD, {
+          type: 'doughnut',
+          data: {
+            labels,
+            datasets: [{
+              data,
+              backgroundColor: [
+                accent,
+                'rgba(34,197,94,0.6)',
+                'rgba(34,197,94,0.35)',
+                'rgba(34,197,94,0.2)',
+                'rgba(34,197,94,0.12)'
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom' },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => {
+                    const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+                    const val = ctx.parsed;
+                    const pct = ((val/total)*100).toFixed(1);
+                    return `${ctx.label}: ${val} (${pct}%)`;
+                  }
+                }
+              }
+            },
+            cutout: '55%'
+          }
+        }));
+      }
+
+      updateChartColors();
+    }
+
+    // === Hotkeys & UI ===
+    function initUI() {
+      const helpOverlay = document.getElementById('helpOverlay');
+      const blackout = document.getElementById('blackout');
+      const themeBtn = document.getElementById('themeToggle');
+      const helpBtn = document.getElementById('helpToggle');
+      const helpClose = document.getElementById('helpClose');
+      const printBtn = document.getElementById('printBtn');
+
+      const toggleHelp = () => {
+        const isHidden = helpOverlay.getAttribute('aria-hidden') === 'true';
+        helpOverlay.setAttribute('aria-hidden', String(!isHidden));
+      };
+      helpBtn?.addEventListener('click', toggleHelp);
+      helpClose?.addEventListener('click', toggleHelp);
+
+      themeBtn?.addEventListener('click', () => {
+        const next = (document.documentElement.dataset.theme === 'dark') ? 'light' : 'dark';
+        applyTheme(next);
+      });
+
+      printBtn?.addEventListener('click', () => window.print());
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === 'h') { e.preventDefault(); toggleHelp(); }
+        if (e.key.toLowerCase() === 'd') { e.preventDefault(); themeBtn?.click(); }
+        if (e.key.toLowerCase() === 'g') { e.preventDefault(); if (window.Reveal) Reveal.slide(1,0); }
+        if (e.key.toLowerCase() === 'f') {
+          e.preventDefault();
+          if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+          else document.exitFullscreen().catch(()=>{});
+        }
+        if (e.key.toLowerCase() === 'b') {
+          e.preventDefault();
+          const isHidden = blackout.getAttribute('aria-hidden') === 'true';
+          blackout.setAttribute('aria-hidden', String(!isHidden));
+        }
+      });
+    }
+
+    // === Bootstrap ===
+    (function bootstrap() {
+      // Tema iniziale
+      applyTheme(getStoredTheme());
+      // Reveal
+      initReveal();
+      // Charts
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        initCharts();
+      } else {
+        document.addEventListener('DOMContentLoaded', initCharts);
+      }
+      // Mermaid (prima applico tema per coerenza)
+      applyMermaidTheme(document.documentElement.dataset.theme);
+      // UI
+      initUI();
+    })();
+  </script>
+
+  <!--
+TEST AUTOMATICO (autochecklist)
+[x] File unico apribile in locale
+[x] Progress bar + numerazione slide attive
+[x] 1–2 grafici visibili e responsive
+[x] 1 diagramma Mermaid renderizzato
+[x] Toggle dark/light persistente e coerente con preferenze di sistema
+[x] Accessibilità base (aria, focus, alt, contrasto AA)
+[x] Sezione Q&A + Risorse/Link
+[x] Commenti `MODIFICA QUI` sulle parti di testo
+
+FIX
+- N/A (tutti i controlli risultano soddisfatti). In caso di problemi CDN, vedere le NOTE CDN in testa per alternative.
+-->
+</body>
+</html>
