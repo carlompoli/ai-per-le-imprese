@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <title>AI per le Imprese — Presentazione Interattiva</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Reveal.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css" id="theme">
+
+  <!-- Tailwind (utility) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+
+  <!-- Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <style>
+    :root{ --accent:#22c55e; --maxw:80ch; }
+    .accent{ color:var(--accent); }
+    .reveal section img{ max-height:60vh; object-fit:contain }
+    .callout{ border-left:6px solid var(--accent); padding:.8rem 1rem; background:#0b0b0b33; border-radius:.5rem }
+    .badge{ display:inline-block; border:1px solid #ffffff44; border-radius:999px; padding:.15rem .6rem; margin:.1rem; font-size:.8rem }
+    .table{ width:100%; border-collapse:collapse; max-width:var(--maxw); margin-inline:auto }
+    .table th,.table td{ border:1px solid #ffffff22; padding:.5rem; text-align:left }
+    .top-right{ position:absolute; top:12px; right:16px; z-index:9 }
+    .toolbar{ display:flex; gap:.5rem }
+    .btn{ padding:.35rem .7rem; border:1px solid #fff3; border-radius:.5rem; background:#0006; cursor:pointer }
+    .reveal .progress span{ background:var(--accent) }
+    .wrap{ max-width:var(--maxw); margin:0 auto }
+    /* Focus visibile */
+    :focus{ outline:3px solid var(--accent); outline-offset:2px }
+    /* Help overlay */
+    #helpOverlay{ position:fixed; inset:0; display:none; background:#0009; z-index:99; align-items:center; justify-content:center; }
+    #helpCard{ background:#111827; padding:1.25rem 1.5rem; border-radius:.75rem; max-width:600px; width:min(90%,600px) }
+    #helpCard h3{ margin-top:0 }
+    /* Stampa */
+    @media print{
+      .top-right, .reveal .controls, .reveal .progress{ display:none !important }
+      body{ color:#000 }
+      .callout{ background:#eee; border-color:#0ea5e9 }
+      .badge{ border-color:#666; color:#000 }
+    }
+  </style>
+</head>
+<body>
+<a href="#/0" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-black/70 text-white px-2 py-1 rounded">Salta al contenuto</a>
+
+<div class="reveal" aria-label="Presentazione AI per le Imprese">
+  <div class="slides">
+
+    <!-- HERO -->
+    <section data-background-gradient="linear-gradient(135deg,#0a0a0a,#111827)">
+      <div class="top-right toolbar">
+        <button id="modeBtn" class="btn" aria-pressed="false" aria-label="Cambia tema">🌓 Tema</button>
+        <button id="helpBtn" class="btn" aria-haspopup="dialog" aria-controls="helpOverlay">❓ Help</button>
+        <button id="printBtn" class="btn" aria-label="Stampa o Esporta PDF">🖨️ Stampa</button>
+      </div>
+      <div class="wrap">
+        <h1 class="accent">AI per le Imprese</h1>
+        <p class="text-xl">Tecnologia, strategia, persone e casi d’uso</p>
+        <p class="mt-6"><span class="badge">CMP</span> <span class="badge">2025</span> <span class="badge">Presentazione Web</span></p>
+      </div>
+      <aside class="notes">
+        Obiettivo: vista sistemica — manifesto, tecnologia, organizzazione, use cases. Durata ~20–25 min.
+      </aside>
+    </section>
+
+    <!-- SOMMARIO -->
+    <section>
+      <div class="wrap">
+        <h2>Sommario</h2>
+        <ol>
+          <li>Manifesto &amp; Contesto</li>
+          <li>Tecnologia &amp; Alfabetizzazione</li>
+          <li>Consulenza Strategica &amp; Modelli</li>
+          <li>Filosofi Digitali &amp; Geopolitica</li>
+          <li>Persone &amp; Organizzazione</li>
+          <li>Use Cases &amp; Trend</li>
+          <li>Q&amp;A</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- MANIFESTO -->
+    <section>
+      <div class="wrap">
+        <h2>Manifesto di riferimento <span class="badge">CMP</span></h2>
+        <div class="callout">
+          <!-- MODIFICA QUI -->
+          Linee guida per un’adozione responsabile, utile e sostenibile dell’AI nelle imprese.
+        </div>
+        <ul>
+          <!-- MODIFICA QUI -->
+          <li>Webinar: 24 Luglio &amp; 7 Agosto</li>
+          <li>Documento “Manifesto” (v1)</li>
+          <li>Valori: impatto sul business, etica, sicurezza, upskilling continuo</li>
+        </ul>
+      </div>
+      <aside class="notes">Invito: adesione al manifesto e roadmap con metriche (OKR).</aside>
+    </section>
+
+    <!-- TECNOLOGIA -->
+    <section>
+      <div class="wrap">
+        <h2>Technology: Capire i LLM</h2>
+        <p class="mb-3">Riferimenti didattici <span class="badge">Andrej Karpathy</span></p>
+        <ul>
+          <li><strong>Intro to LLM</strong> — concetti base, token, training</li>
+          <li><strong>Details of LLM</strong> — attention, scaling, inference</li>
+          <li><strong>How to use GPT</strong> — prompting, tool-use, valutazione</li>
+        </ul>
+        <p class="mt-4">Obiettivo: passare da “demo” a “prodotti affidabili”.</p>
+      </div>
+    </section>
+
+    <!-- ALFABETIZZAZIONE -->
+    <section>
+      <div class="wrap">
+        <h2>Alfabetizzazione &amp; Low/No-Code</h2>
+        <ul>
+          <!-- MODIFICA QUI -->
+          <li>Programmi di <strong>AI literacy</strong> per tutte le funzioni (fdb)</li>
+          <li>Approccio <strong>Low-code/No-code</strong> (vdr) per PoC rapidi</li>
+          <li>Policy: dati, sicurezza, privacy, conformità</li>
+        </ul>
+        <div class="callout mt-4">Risultato: prototipi in settimane, non mesi.</div>
+      </div>
+    </section>
+
+    <!-- CONSULENZA -->
+    <section>
+      <div class="wrap">
+        <h2>Consulenza Strategica</h2>
+        <ul>
+          <li><strong>Agentic Mesh</strong> — ecosistemi di agenti specializzati</li>
+          <li><strong>Operating Model</strong> data+AI driven</li>
+          <li><strong>Trasformazione dei business model</strong> (doc CMP)</li>
+        </ul>
+        <p class="mt-4">Dalla sperimentazione all’<em>AI Operating Model</em>.</p>
+      </div>
+    </section>
+
+    <!-- FILOSOFI / GEO -->
+    <section>
+      <div class="wrap">
+        <h2>Filosofi digitali &amp; Geopolitica</h2>
+        <ul>
+          <!-- MODIFICA QUI -->
+          <li>Riferimenti: Lucidi, Chiriatti, Prete</li>
+          <li>Geopolitica dell’AI: catena valore, standard, regolazione</li>
+        </ul>
+        <div class="callout mt-4">Scenario thinking per investimenti e rischi.</div>
+      </div>
+    </section>
+
+    <!-- PEOPLE & ORG -->
+    <section>
+      <div class="wrap">
+        <h2>Persone &amp; Organizzazione</h2>
+        <table class="table">
+          <thead><tr><th>Ambito</th><th>Priorità</th><th>Output</th></tr></thead>
+          <tbody>
+            <tr><td>People</td><td>Upskilling, job design</td><td>Academy, playbook, badge</td></tr>
+            <tr><td>Organizzazione</td><td>Processi &amp; governance</td><td>AI CoE, policy, risk mgmt</td></tr>
+            <tr><td>Technology</td><td>Piattaforma &amp; dati</td><td>Catalogo modelli, MLOps</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- USE CASES -->
+    <section>
+      <div class="wrap">
+        <h2>Use cases</h2>
+        <ul>
+          <!-- MODIFICA QUI -->
+          <li><strong>Porti</strong> — ottimizzazione flussi, ETA predittiva, sicurezza</li>
+          <li><strong>Aeroporti</strong> — ops real-time, customer experience, manutenzione</li>
+          <li><strong>Venture Capital</strong> — screening deal, DD automatizzata</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- TREND: CHART -->
+    <section>
+      <div class="wrap">
+        <h2>Trend &amp; adozione</h2>
+        <canvas id="adoptionChart" aria-label="Grafico adozione AI" role="img"></canvas>
+        <p class="text-sm opacity-80">Esempio: velocità di adozione per funzione aziendale.</p>
+      </div>
+    </section>
+
+    <!-- ROADMAP: MERMAID -->
+    <section>
+      <div class="wrap">
+        <h2>Roadmap di adozione</h2>
+        <div class="mermaid">
+          flowchart LR
+            A[Manifesto] --> B(Use cases prioritari)
+            B --> C{Pilota}
+            C -->|OK| D[Scaling]
+            C -->|Fix| B
+            D --> E[AI Operating Model]
+            E --> F[Agentic Mesh]
+        </div>
+      </div>
+    </section>
+
+    <!-- PRO/CONTRO -->
+    <section>
+      <div class="wrap">
+        <h2>Pro / Contro</h2>
+        <table class="table">
+          <thead><tr><th>Pro</th><th>Contro</th></tr></thead>
+          <tbody>
+            <tr><td>Velocità e automazione</td><td>Rischi sicurezza/dati</td></tr>
+            <tr><td>Nuovi ricavi</td><td>Debito tecnico se non governato</td></tr>
+            <tr><td>Vantaggio competitivo</td><td>Change management complesso</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section>
+      <div class="wrap">
+        <h2>Prossimi passi</h2>
+        <ol>
+          <!-- MODIFICA QUI -->
+          <li>Allineamento sul Manifesto &amp; metriche</li>
+          <li>Selezione 3 use case prioritari</li>
+          <li>Pilota 8–12 settimane con KPI</li>
+          <li>Design AI Operating Model</li>
+        </ol>
+        <p class="mt-6"><span class="badge">Contatti</span> LinkedIn / Email CMP</p>
+      </div>
+    </section>
+
+    <!-- Q&A -->
+    <section>
+      <div class="wrap">
+        <h2>Q&amp;A</h2>
+        <p>Domande, obiezioni, casi specifici?</p>
+      </div>
+    </section>
+
+    <!-- GUIDA PAGES -->
+    <section>
+      <div class="wrap">
+        <h2>Come pubblicare su GitHub Pages</h2>
+        <ol>
+          <li>Crea un repo e carica <code>index.html</code></li>
+          <li>Settings → Pages → Branch <em>main</em> / <em>root</em></li>
+          <li>Apri l’URL generato e condividi il link</li>
+        </ol>
+        <footer class="text-sm opacity-80">Questa presentazione è un sito web: funziona su desktop e mobile.</footer>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- Help overlay -->
+<div id="helpOverlay" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div id="helpCard">
+    <h3 id="helpTitle">Scorciatoie</h3>
+    <ul>
+      <li><b>←/→</b> navigazione slide</li>
+      <li><b>H</b> toggle help • <b>ESC</b> chiudi</li>
+      <li><b>G</b> vai alla prima slide</li>
+      <li><b>D</b> dark/light mode</li>
+      <li><b>F</b> fullscreen • <b>B</b> black screen (Reveal)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Reveal init -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+<script>
+  // === Tema persistente ===
+  const themeLink = document.getElementById('theme');
+  const THEME_KEY = 'cmp-theme';
+  function setTheme(mode){
+    if(mode==='light'){
+      themeLink.href = 'https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css';
+      document.documentElement.style.setProperty('--accent','#0ea5e9');
+      mermaid.initialize({ startOnLoad:true, theme:'default' });
+    }else{
+      themeLink.href = 'https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css';
+      document.documentElement.style.setProperty('--accent','#22c55e');
+      mermaid.initialize({ startOnLoad:true, theme:'dark' });
+    }
+    localStorage.setItem(THEME_KEY, mode);
+  }
+  const saved = localStorage.getItem(THEME_KEY);
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  setTheme(saved || (prefersDark ? 'dark':'light'));
+
+  // === Reveal ===
+  const deck = new Reveal({
+    hash:true, slideNumber:true, progress:true,
+    transition:'slide', backgroundTransition:'fade',
+    controlsTutorial:false
+  });
+  deck.initialize();
+
+  // === Chart.js ===
+  const ctx = document.getElementById('adoptionChart');
+  let chart;
+  function buildChart(){
+    if(!ctx) return;
+    if(chart) chart.destroy();
+    chart = new Chart(ctx, {
+      type:'bar',
+      data:{
+        labels:['Operazioni','Marketing','HR','Finance','IT'],
+        datasets:[{
+          label:'Adozione AI (0–100)',
+          data:[65,58,45,52,75]
+        }]
+      },
+      options:{
+        responsive:true,
+        plugins:{
+          legend:{ display:true },
+          tooltip:{ callbacks:{ label:(c)=> `${c.dataset.label}: ${c.parsed.y}` } }
+        },
+        scales:{ y:{ beginAtZero:true, max:100 } }
+      }
+    });
+  }
+  buildChart();
+
+  // Risincronizza chart al cambio tema (per future personalizzazioni)
+  function refreshVisuals(){ buildChart(); }
+  // === UI Buttons ===
+  const modeBtn = document.getElementById('modeBtn');
+  const helpBtn = document.getElementById('helpBtn');
+  const printBtn = document.getElementById('printBtn');
+  const helpOverlay = document.getElementById('helpOverlay');
+
+  modeBtn?.addEventListener('click', ()=>{
+    const next = themeLink.href.includes('black') ? 'light':'dark';
+    setTheme(next); refreshVisuals();
+  });
+
+  helpBtn?.addEventListener('click', ()=> helpOverlay.style.display='flex');
+  helpOverlay?.addEventListener('click', (e)=>{ if(e.target===helpOverlay) helpOverlay.style.display='none'; });
+
+  printBtn?.addEventListener('click', ()=> window.print());
+
+  // === Hotkeys ===
+  document.addEventListener('keydown', (e)=>{
+    if(e.key.toLowerCase()==='h'){ helpOverlay.style.display = (helpOverlay.style.display==='flex'?'none':'flex'); }
+    if(e.key.toLowerCase()==='g'){ deck.slide(0,0,0); }
+    if(e.key.toLowerCase()==='d'){ modeBtn.click(); }
+    if(e.key==='Escape'){ helpOverlay.style.display='none'; }
+  });
+</script>
+</body>
+</html>
