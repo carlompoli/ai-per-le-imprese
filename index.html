@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <title>AI per le Imprese — Presentazione Interattiva</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Reveal.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css" id="theme">
+  <!-- Tailwind (solo utility) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <!-- Mermaid -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --accent: #22c55e;
+    }
+    .accent { color: var(--accent); }
+    .reveal section img { max-height: 60vh; object-fit: contain; }
+    .callout{border-left:6px solid var(--accent);padding:0.8rem 1rem;background:#0b0b0b33;border-radius:.5rem}
+    .badge{display:inline-block;border:1px solid #ffffff44;border-radius:999px;padding:.15rem .6rem;margin:.1rem;font-size:.8rem}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{border:1px solid #ffffff22;padding:.5rem;text-align:left}
+    .top-right { position:absolute; top:12px; right:16px; z-index:9;}
+    .toggle { padding:.35rem .7rem; border:1px solid #fff3; border-radius:.5rem; background:#0006; cursor:pointer }
+    .reveal .progress { background: #333; }
+    .reveal .progress span { background: var(--accent); }
+    footer.small { font-size:.75rem; opacity:.8; margin-top:1rem }
+  </style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- HERO -->
+    <section data-background-gradient="linear-gradient(135deg,#0a0a0a,#111827)">
+      <div class="top-right">
+        <button id="modeBtn" class="toggle">🌓 Dark/Light</button>
+      </div>
+      <h1 class="accent">AI per le Imprese</h1>
+      <p class="text-xl">Tecnologia, strategia, persone e casi d’uso</p>
+      <p class="mt-6"><span class="badge">CMP</span> <span class="badge">2025</span> <span class="badge">Presentazione Web</span></p>
+      <aside class="notes">
+        Obiettivo: dare una vista sistemica — manifesto, tecnologia, organizzazione, use cases.
+      </aside>
+    </section>
+
+    <!-- SOMMARIO -->
+    <section>
+      <h2>Sommario</h2>
+      <ol>
+        <li>Manifesto &amp; Contesto</li>
+        <li>Tecnologia &amp; Alfabetizzazione</li>
+        <li>Consulenza Strategica &amp; Modelli</li>
+        <li>Filosofi Digitali &amp; Geopolitica</li>
+        <li>Persone &amp; Organizzazione</li>
+        <li>Use Cases &amp; Trend</li>
+        <li>Q&amp;A</li>
+      </ol>
+    </section>
+
+    <!-- MANIFESTO -->
+    <section>
+      <h2>Manifesto di riferimento <span class="badge">CMP</span></h2>
+      <div class="callout">
+        Linee guida per un’adozione responsabile, utile e sostenibile dell’AI nelle imprese.
+      </div>
+      <ul>
+        <li>Webinar: 24 Luglio &amp; 7 Agosto</li>
+        <li>Documento “Manifesto” (v1)</li>
+        <li>Valori: impatto sul business, etica, sicurezza, upskilling continuo</li>
+      </ul>
+      <aside class="notes">Invito all’azione: adesione al manifesto e roadmap con metriche.</aside>
+    </section>
+
+    <!-- TECNOLOGIA - KARPATHY -->
+    <section>
+      <h2>Technology: Capire i LLM</h2>
+      <p class="mb-3">Riferimenti didattici <span class="badge">Andrej Karpathy</span></p>
+      <ul>
+        <li><strong>Intro to LLM</strong> — concetti base, token, training</li>
+        <li><strong>Details of LLM</strong> — attention, scaling, inference</li>
+        <li><strong>How to use GPT</strong> — prompting, tool-use, valutazione</li>
+      </ul>
+      <p class="mt-4">Obiettivo: passare da “demo” a “prodotti affidabili”.</p>
+    </section>
+
+    <!-- ALFABETIZZAZIONE / LOW-CODE -->
+    <section>
+      <h2>Alfabetizzazione &amp; Low/No-Code</h2>
+      <ul>
+        <li>Programmi di <strong>AI literacy</strong> per tutte le funzioni (fdb)</li>
+        <li>Approccio <strong>Low-code/No-code</strong> (vdr) per PoC rapidi</li>
+        <li>Policy interne: dati, sicurezza, privacy, conformità</li>
+      </ul>
+      <div class="callout mt-4">Risultato atteso: prototipi in settimane, non mesi.</div>
+    </section>
+
+    <!-- CONSULENZA STRATEGICA -->
+    <section>
+      <h2>Consulenza Strategica</h2>
+      <ul>
+        <li><strong>Agentic Mesh</strong> (McKinsey) — ecosistemi di agenti specializzati</li>
+        <li><strong>Modelli organizzativi</strong> data+AI driven</li>
+        <li><strong>Trasformazione dei modelli di business</strong> (doc CMP)</li>
+      </ul>
+      <p class="mt-4">Dalla sperimentazione all’<em>AI Operating Model</em>.</p>
+    </section>
+
+    <!-- FILOSOFI DIGITALI / GEOPOLITICA -->
+    <section>
+      <h2>Filosofi digitali &amp; Geopolitica</h2>
+      <ul>
+        <li>Riferimenti: Lucidi (rm), Chiriatti (vdr), Prete (rm)</li>
+        <li>Geopolitica dell’AI: catena valore, standard, regolazione</li>
+      </ul>
+      <div class="callout mt-4">Scenario thinking per investimenti e rischi.</div>
+    </section>
+
+    <!-- PERSONE & ORGANIZZAZIONE -->
+    <section>
+      <h2>Persone &amp; Organizzazione</h2>
+      <table class="table">
+        <thead><tr><th>Ambito</th><th>Priorità</th><th>Output</th></tr></thead>
+        <tbody>
+          <tr><td>People</td><td>Upskilling, job design</td><td>Academy, playbook, badge</td></tr>
+          <tr><td>Organizzazione</td><td>Processi &amp; governance</td><td>AI CoE, policy, risk mgmt</td></tr>
+          <tr><td>Technology</td><td>Piattaforma &amp; dati</td><td>Catalogo modelli, MLOps</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- USE CASES -->
+    <section>
+      <h2>Use cases (fdb)</h2>
+      <ul>
+        <li><strong>Porti</strong> — ottimizzazione flussi, ETA predittiva, sicurezza</li>
+        <li><strong>Aeroporti</strong> — ops real-time, customer experience, manutenzione</li>
+        <li><strong>Venture Capital</strong> — screening deal, DD automatizzata</li>
+      </ul>
+      <p class="mt-4">Riferimenti: <em>Mary Meeker</em>, <em>Leadership nel mondo agentico</em> (fl)</p>
+    </section>
+
+    <!-- CHART: TREND ADOPTION -->
+    <section>
+      <h2>Trend &amp; adozione</h2>
+      <canvas id="adoptionChart" aria-label="Grafico adozione AI" role="img"></canvas>
+      <p class="text-sm opacity-80">Esempio: velocità di adozione stimata per funzione aziendale.</p>
+    </section>
+
+    <!-- MERMAID: ROADMAP -->
+    <section>
+      <h2>Roadmap di adozione</h2>
+      <div class="mermaid">
+        flowchart LR
+          A[Manifesto] --> B(Use cases prioritari)
+          B --> C{Pilota}
+          C -->|OK| D[Scaling]
+          C -->|Fix| B
+          D --> E[AI Operating Model]
+          E --> F[Agentic Mesh]
+      </div>
+    </section>
+
+    <!-- CONTEX / TIMELINE -->
+    <section>
+      <h2>Contesto &amp; Timeline (vdr)</h2>
+      <ul>
+        <li>T0: Manifesto + policy minime</li>
+        <li>T1 (90 gg): PoC mirati con ROI atteso</li>
+        <li>T2 (6–12 mesi): scale-up e piattaforma</li>
+      </ul>
+    </section>
+
+    <!-- PRO/CONTRO -->
+    <section>
+      <h2>Pro / Contro</h2>
+      <div class="r-stack">
+        <div>
+          <table class="table">
+            <thead><tr><th>Pro</th><th>Contro</th></tr></thead>
+            <tbody>
+              <tr><td>Velocità e automazione</td><td>Rischi sicurezza/dati</td></tr>
+              <tr><td>Nuovi ricavi</td><td>Debito tecnico se non governato</td></tr>
+              <tr><td>Vantaggio competitivo</td><td>Change management complesso</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALL TO ACTION -->
+    <section>
+      <h2>Prossimi passi</h2>
+      <ol>
+        <li>Allineamento sul Manifesto &amp; metriche</li>
+        <li>Selezione 3 use case prioritari</li>
+        <li>Pilota 8–12 settimane con KPI</li>
+        <li>Design AI Operating Model</li>
+      </ol>
+      <p class="mt-6"><span class="badge">Contatti</span> LinkedIn / Email CMP</p>
+    </section>
+
+    <!-- Q&A -->
+    <section>
+      <h2>Q&amp;A</h2>
+      <p>Domande, obiezioni, casi specifici?</p>
+    </section>
+
+    <!-- GUIDA GITHUB PAGES -->
+    <section>
+      <h2>Come pubblicare su GitHub Pages</h2>
+      <ol>
+        <li>Crea un repo e carica questo <code>index.html</code></li>
+        <li>Vai su <em>Settings → Pages</em>, scegli <em>Main / root</em></li>
+        <li>Apri l’URL generato e condividi il link</li>
+      </ol>
+      <footer class="small">Questa presentazione è un sito web: funziona su desktop e mobile.</footer>
+    </section>
+
+  </div>
+</div>
+
+<!-- Reveal init -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+<script>
+  // Theme toggle
+  const modeBtn = document.getElementById('modeBtn');
+  const themeLink = document.getElementById('theme');
+  modeBtn.addEventListener('click', () => {
+    if (themeLink.getAttribute('href').includes('black')) {
+      themeLink.setAttribute('href', 'https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/white.css');
+      document.documentElement.style.setProperty('--accent', '#0ea5e9');
+    } else {
+      themeLink.setAttribute('href', 'https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css');
+      document.documentElement.style.setProperty('--accent', '#22c55e');
+    }
+  });
+
+  const deck = new Reveal({
+    hash: true,
+    slideNumber: true,
+    progress: true,
+    transition: 'slide',
+    backgroundTransition: 'fade'
+  });
+  deck.initialize();
+
+  // Chart.js example
+  const ctx = document.getElementById('adoptionChart');
+  if (ctx) {
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Operazioni','Marketing','HR','Finance','IT'],
+        datasets: [{
+          label: 'Adozione AI (indice 0-100)',
+          data: [65, 58, 45, 52, 75]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true },
+          tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${c.parsed.y}` } }
+        },
+        scales: { y: { beginAtZero: true, max: 100 } }
+      }
+    });
+  }
+
+  // Mermaid init
+  mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+</script>
+</body>
+</html>
